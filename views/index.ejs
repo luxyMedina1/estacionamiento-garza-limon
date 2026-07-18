@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Estacionamiento - Panel de Control</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #121214; color: #e1e1e6; margin: 40px; }
+        .container { display: flex; gap: 30px; }
+        .box { background: #202024; padding: 20px; border-radius: 8px; flex: 1; border-top: 4px solid #ff79c6; }
+        h1 { color: #bd93f9; }
+        h2 { color: #ff79c6; }
+        input, select, button { width: 100%; padding: 10px; margin: 10px 0; border-radius: 4px; border: 1px solid #44475a; background: #282a36; color: white; box-sizing: border-box; }
+        button { background: #bd93f9; color: #282a36; cursor: pointer; font-weight: bold; border: none; }
+        button:hover { background: #ff79c6; }
+        .alert-success { color: #50fa7b; background: #1c2c22; padding: 10px; border-radius: 4px; }
+        .alert-danger { color: #ff5555; background: #2c1c1c; padding: 10px; border-radius: 4px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #44475a; }
+        th { color: #8be9fd; }
+        a { color: #bd93f9; text-decoration: none; font-weight: bold; }
+        a:hover { color: #ff79c6; }
+    </style>
+</head>
+<body>
+    <h1>🏢 Control de Estacionamiento</h1>
+    <p><a href="/reportes">📊 Ir a la Sección de Reportes</a></p>
+
+    <% if (mensaje) { %> <div class="alert-success"><%= mensaje %></div> <% } %>
+    <% if (error) { %> <div class="alert-danger"><%= error %></div> <% } %>
+
+    <div class="container" style="margin-top:20px;">
+        <div class="box">
+            <h2>📥 Registrar Entrada</h2>
+            <form action="/entrada" method="POST">
+                <input type="text" name="placa" placeholder="Número de Placa" required>
+                <select name="tipo_id" required>
+                    <% tipos.forEach(t => { %>
+                        <option value="<%= t.id %>"><%= t.nombre %> ($<%= t.tarifa_por_minuto %>/min)</option>
+                    <% }) %>
+                </select>
+                <button type="submit">Ingresar Vehículo</button>
+            </form>
+        </div>
+
+        <div class="box">
+            <h2>📤 Registrar Salida</h2>
+            <form action="/salida" method="POST">
+                <input type="text" name="placa" placeholder="Número de Placa" required>
+                <button type="submit" style="background: #ff5555; color: white;">Cobrar y Dar Salida</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="box" style="margin-top: 30px;">
+        <h2>🚗 Vehículos Adentro Actualmente (<%= activos.length %>)</h2>
+        <table>
+            <thead>
+                <tr><th>Placa</th><th>Tipo de Vehículo</th></tr>
+            </thead>
+            <tbody>
+                <% activos.forEach(a => { %>
+                    <tr><td><strong><%= a.placa %></strong></td><td><%= a.tipo %></td></tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

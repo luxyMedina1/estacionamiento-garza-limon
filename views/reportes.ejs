@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Reportes del Sistema</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #121214; color: #e1e1e6; margin: 40px; }
+        h1 { color: #bd93f9; }
+        .box { background: #202024; padding: 20px; border-radius: 8px; border-top: 4px solid #ff79c6; }
+        input, button { padding: 10px; margin: 5px; border-radius: 4px; border: 1px solid #44475a; background: #282a36; color: white; }
+        button { background: #bd93f9; color: #282a36; cursor: pointer; font-weight: bold; border: none; }
+        button:hover { background: #ff79c6; }
+        .btn-download { background: #50fa7b; display: inline-block; padding: 10px 15px; color: #282a36; text-decoration: none; border-radius: 4px; margin-right: 10px; font-weight: bold;}
+        .btn-download:hover { opacity: 0.9; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #44475a; }
+        th { color: #8be9fd; }
+        a { color: #bd93f9; text-decoration: none; font-weight: bold; }
+        a:hover { color: #ff79c6; }
+    </style>
+</head>
+<body>
+    <h1>📊 Generación de Reportes</h1>
+    <p><a href="/">⬅️ Regresar al Panel Principal</a></p>
+
+    <div class="box">
+        <form action="/reportes/buscar" method="GET">
+            <input type="date" name="fecha" required value="<%= query.fecha || '' %>">
+            <input type="time" name="hora_inicio" required value="<%= query.hora_inicio || '13:00' %>">
+            <input type="time" name="hora_fin" required value="<%= query.hora_fin || '17:00' %>">
+            <button type="submit">Filtrar</button>
+        </form>
+
+        <% if (filtrado) { %>
+            <div style="margin-top: 20px; margin-bottom: 20px;">
+                <a class="btn-download" href="/reportes/excel?fecha=<%= query.fecha %>&hora_inicio=<%= query.hora_inicio %>&hora_fin=<%= query.hora_fin %>">📥 Descargar Excel</a>
+                <a class="btn-download" style="background:#ff5555; color: white;" href="/reportes/pdf?fecha=<%= query.fecha %>&hora_inicio=<%= query.hora_inicio %>&hora_fin=<%= query.hora_fin %>">📥 Descargar PDF</a>
+            </div>
+
+            <table>
+                <thead>
+                    <tr><th>Núm. Placa</th><th>Tiempo Estacionado</th><th>Tipo</th><th>Cantidad a Pagar</th></tr>
+                </thead>
+                <tbody>
+                    <% datos.forEach(d => { %>
+                        <tr>
+                            <td><%= d.placa %></td>
+                            <td><%= d.minutos %> min</td>
+                            <td><%= d.tipo %></td>
+                            <td>$<%= d.monto_pagado %></td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        <% } %>
+    </div>
+</body>
+</html>

@@ -46,7 +46,7 @@ exports.salida = async (req, res) => {
         if (estancia.tipo_nombre === 'Residente') {
             total = minutos * 1.00;
         } else if (estancia.tipo_nombre === 'No Residente') {
-            total = minutes * 3.00;
+            total = minutos * 3.00; // Corregido: de 'minutes' a 'minutos'
         } // Oficial se queda en 0.00
 
         await EstacionamientoModel.registrarSalida(estancia.id, total);
